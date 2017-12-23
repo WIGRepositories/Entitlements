@@ -1,0 +1,8 @@
+Name, Code,	Description, Address, ContactNo1, ContactNo2, EmailId, Active, Fax, Title, Caption,	Country, ZipCode, State, FleetSize,	StaffSize, AlternateAddress, ShippingAddress, AddressId, Logo
+
+						
+						
+						
+example:						
+xenosoft, 456, WEBINGATE2, company,	9-234 Jubilee Hills, 546, NULL, xeno3@gmail.com, 1,	NULL, NULL,	NULL, NULL,	NULL, NULL,	NULL, NULL,	NULL, NULL,	NULL, NULL
+
