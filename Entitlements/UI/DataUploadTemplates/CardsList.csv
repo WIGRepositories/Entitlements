@@ -1,0 +1,8 @@
+CardNumber,	CardModel, CardType, CardCategory, StatusId, UserId, Customer, EffectiveFrom, EffectiveTo
+
+						
+						
+						
+example:						
+4886, Silver,Contact card,Visa, 1, 1, ramu, 1/1/2015, 1/1/2015
+
