@@ -18,14 +18,14 @@
     <link type="text/css" rel="stylesheet" href="css/style-responsive.css">
 </head>
 
-<body ng-app="myApp" ng-controller="myCtrl" ng-init="" ng-model="NewObjects">
+<body ng-app="myApp" ng-controller="myCtrl" ng-init="getObjects()" ng-model="NewObjects">
     <div>
               <a id="totop" href="#"><i class="fa fa-angle-up"></i></a><!--END BACK TO TOP--><!--BEGIN TOPBAR-->
         <div id="header-topbar-option-demo" class="page-header-topbar">
             <nav id="topbar" role="navigation" style="margin-bottom: 0;" data-step="3" class="navbar navbar-default navbar-static-top">
                 <div class="navbar-header">
                     <button type="button" data-toggle="collapse" data-target=".sidebar-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-                    <a id="logo" href="index.html" class="navbar-brand"><img src="images/dashboard.png" height="90" width="110" align="left" alt="" class="img-responsive"><font size="3">Smart Tickets Dashboard</font></><span style="display: none" class="logo-text-icon">µ</span></a>
+                    <a id="logo" href="index.html" class="navbar-brand"><img src="images/dashboard.png" height="90" width="110" align="left" alt="" class="img-responsive"><font size="3">Entitlements</font></><span style="display: none" class="logo-text-icon">µ</span></a>
                 </div>
                 <div class="topbar-main">
                     <a id="menu-toggle" href="#" class="hidden-xs"><i class="fa fa-bars"></i></a>
@@ -167,10 +167,12 @@
 
                                             <div class="col-lg-12">
 
-                                                <!--<div class="actions">-->
-                                                    <!-----   <a href="NewObject.html"><button type="button" data-target="#modal-header-primary" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float:right;margin:10px;">  Add New Object</button></a>--->
-                                                    <!--<button ng-hide="isSuperUser == 0 && isAdminSupervisor ==0" type="button" data-target="#Modal-header-new" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float: right; margin: 10px;"> Add New Object</button>-->
-                                                <!--</div>-->
+                                                <div class="actions">
+                                                    <button type="button" data-target="#Modal-header-new" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float:right;margin:10px;">  Add New Object</button>
+
+                                                    <button ng-hide="isSuperUser == 0 && isAdminSupervisor ==0" type="button" data-target="#Modal-header-newapp" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float: right; margin: 10px;"> Add Application</button>
+
+                                                </div>
 
                                                 
 
@@ -203,9 +205,9 @@
                                                             <td style="text-align:center">
                                                                 <button ng-click="remove_node(a)" ng-disabled="CanUploadDoc == 0" ng-hide="a.ParentId == null" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
                                                             </td>                                                            
-                                                            <td>
+                                                            <!--<td>
                                                                 <div ng-dropdown-multiselect="" options="example1data" selected-model="example1model"></div>
-                                                            </td>
+                                                            </td>-->
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -299,32 +301,20 @@
                                 <select ng-options="O.Name for O in NewObjects track by O.Id" class="form-control"  ng-model="p">
                                     <option value="">Select</option>
                                 </select>
-
-
                             </div>
                         </div>
-
-
-
 
                         <div class="row mbm">
                             <div style="text-align:right">
-
-
                                 <label for="RootObject" class="col-md-4 control-label" style="color:red;"> RootObjectId <span class='require'>*</span></label>
-
-                                <select class="col-md-4 control-label" ng-model="NewObject.RootObjectId">
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" ng-model="NewObject.RootObjectId">
                                     <option value="">select</option>
                                     <option value="1">1</option>
-
-
                                 </select>
-
                             </div>
-
                         </div>
-
-
 
                         <div class="row mbm">
                             <div style="text-align:right">
@@ -332,7 +322,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div><input type="checkbox" checked /></div>
+                                <div><input type="checkbox" class="icheckbox_minimal-grey activeCheckbox" ng-model="NewObject.Active" ng-true-value="1" ng-false-value="0" /></div>
 
                             </div>
                         </div>
@@ -411,6 +401,61 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="Modal-header-newapp" tabindex="-1" role="dialog" aria-labelledby="modal-header-primary-label" aria-hidden="true" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                            <h4 id="modal-header-primary-label" class="modal-title">Add Application</h4>
+                        </div>
+                        <div class="modal-body" ng-model="newapp">
+
+                            <div class="row mbm">
+                                <div style="text-align:right">
+                                    <label for="Name" class="col-md-4 control-label" style="color:red;"> Name <span class='require'>*</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="Name" type="text" ng-model="newapp.Name" class="form-control" /><span class="help-block"></span>
+                                </div>
+                            </div>
+
+
+                            <div class="row mbm">
+                                <div style="text-align:right">
+                                    <label for="Description" class="col-md-4 control-label"> Description <span class='require'></span></label>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <input id="Description" type="text" ng-model="newapp.Description" class="form-control" /><span class="help-block"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mbm">
+                            <div style="text-align:right">
+                                <label for="Active" class="col-md-4 control-label">Active<span class='require'></span></label>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div><input type="checkbox" class="icheckbox_minimal-grey activeCheckbox" ng-model="newapp.Active" ng-true-value="1" ng-false-value="0" /></div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveNewApp(newapp);">Save</button>
+
+                                <a href="#" class="btn btn-green" data-dismiss="modal">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
                            
                             <!--<div class="row mbm">

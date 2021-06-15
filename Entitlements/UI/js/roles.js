@@ -37,7 +37,8 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
             Name: selectedRole.Name,
             Description: selectedRole.Description,
             Active: 1,//selectedRole.Active,
-            IsPublic:1
+            IsPublic: 1,
+            flag: 'I'
         };
 
         var req = {
@@ -47,14 +48,16 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
         }
         $http(req).then(function (response) {
 
-            $scope.showDialog("Saved successfully!");
+            alert("Saved successfully!");
+            $('#Modal-header-new').modal('hide');
+            $scope.GetRoles();
 
         }
 , function (errres) {
     var errdata = errres.data;
     var errmssg = "Your details are incorrect";
     errmssg = (errdata && errdata.ExceptionMessage) ? errdata.ExceptionMessage : errdata.Message;
-    $scope.showDialog(errmssg);
+    alert(errmssg);
 
 });
         $scope.currRole = null;
@@ -78,7 +81,8 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
             Name: currRole.Name,
             Description: currRole.Description,
             Active: (currRole.Active == true) ? "1" : "0",
-            IsPublic: (currRole.IsPublic == true) ? "1" : "0"
+            IsPublic: (currRole.IsPublic == true) ? "1" : "0",
+            flag:'U'
         };
 
         var req = {
@@ -88,15 +92,16 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
         }
         $http(req).then(function (response) {
 
-            $scope.showDialog("Saved successfully!");
-
+            alert("Saved successfully!");
+            $('#Modal-header-primary').modal('hide');
+            $scope.GetRoles();
             $scope.Group = null;
 
         }, function (errres) {
     var errdata = errres.data;
     var errmssg = "Your details are incorrect";
     errmssg = (errdata && errdata.ExceptionMessage) ? errdata.ExceptionMessage : errdata.Message;
-    $scope.showDialog(errmssg);
+    alert(errmssg);
 });
         $scope.currGroup = null;
     };
@@ -215,7 +220,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
         }
         $http(req).then(function (response) {
 
-            $scope.showDialog("Saved successfully!");
+            alert("Saved successfully!");
 
             $scope.Group = null;
 
@@ -223,7 +228,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
     var errdata = errres.data;
     var errmssg = "Your details are incorrect";
     errmssg = (errdata && errdata.ExceptionMessage) ? errdata.ExceptionMessage : errdata.Message;
-    $scope.showDialog(errmssg);
+    alert(errmssg);
 });
         $scope.currGroup = null;
     };
@@ -301,7 +306,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
             data: cmprole
         }
         $http(req).then(function (response) {
-            $scope.showDialog("Saved successfully!");
+            alert("Saved successfully!");
 
             
             $http.get('/api/Roles/GetCompanyRoles?companyId=' + role.CompanyId).then(function (res, data) {

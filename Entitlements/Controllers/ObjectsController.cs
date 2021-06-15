@@ -15,7 +15,7 @@ namespace Entitlements.Controllers
     public class ObjectsController : ApiController
     {
         [HttpGet]
-        public DataTable getObjects()
+        public DataTable getObjects(int objid)
         {
             DataTable Tbl = new DataTable();
 
@@ -31,6 +31,9 @@ namespace Entitlements.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "getObjects";
             cmd.Connection = conn;
+
+            cmd.Parameters.Add("@objid", SqlDbType.Int).Value = objid;
+
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
@@ -39,6 +42,43 @@ namespace Entitlements.Controllers
             // int found = 0;
             return Tbl;
         }
+
+        [HttpGet]
+        public DataTable GetApplications()
+        {
+            DataTable Tbl = new DataTable();
+            SqlConnection conn = new SqlConnection();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "getApplications input....");
+
+                //connect to database
+               
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "getApplications";
+                cmd.Connection = conn;
+              
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "getApplications Output Success.");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            // int found = 0;
+            return Tbl;
+        }
+
+
         [HttpPost]
         public HttpResponseMessage saveObjects(Objects b)
         {

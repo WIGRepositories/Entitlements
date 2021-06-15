@@ -25,9 +25,12 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
 
     $scope.dashboardDS = $localStorage.dashboardDS;
 
-    $http.get('/api/Roledetails/getroledetails?=').then(function (res, data) {
-        $scope.Roledetails = res.data;
-    });
+    $scope.GetRoles = function () {
+        $http.get('/api/Roles/GetRoles?allroles=-1').then(function (response, data) {
+            $scope.roles = response.data;
+
+        });
+    }
 
     $scope.example1model = [];
     $scope.example1data = [{ id: 1, label: "View" }, { id: 2, label: "Edit" }, { id: 3, label: "Delete" }, , { id: 4, label: "Create" }];
@@ -40,7 +43,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
     $scope.GetCompanies = function () {
 
         var vc = {
-            includeActiveCountry: '1'
+            needCompanyName: '1'
         };
 
         var req = {

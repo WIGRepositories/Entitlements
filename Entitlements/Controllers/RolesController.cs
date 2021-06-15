@@ -132,6 +132,8 @@ namespace Entitlements.Controllers
                 cmd.Parameters.Add(aab);
 
 
+                cmd.Parameters.Add("@flag", SqlDbType.VarChar, -1).SqlValue = b.flag;
+
                 //DataSet ds = new DataSet();
                 //SqlDataAdapter db = new SqlDataAdapter(cmd);
                 //db.Fill(ds);
