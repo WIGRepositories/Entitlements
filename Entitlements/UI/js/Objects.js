@@ -65,10 +65,10 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
             return;
         }
 
-        //if ($scope.p.Id == null) {
-        //    alert('Please Enter ParentId');
-        //    return;
-        //}
+        if ($scope.p.Id == null) {
+            alert('Please Enter ParentId');
+            return;
+        }
         if (NewObject.RootObjectId == null) {
             alert('Please Enter RootObjectId');
             return;
@@ -77,7 +77,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         var SelNewObjects = {
             Name: NewObject.Name,
             Description: NewObject.Description,
-            ParentId:($scope.p==null) ? null : $scope.p.Id,
+            ParentId:$scope.p.Id,
             RootObjectId: NewObject.RootObjectId,
             Access: NewObject.Access,
             insupdflag: 'I',
@@ -107,44 +107,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         $scope.currRole = null;
     };
 
-    $scope.saveNewApp = function (a) {
-
-        if (a == null) {
-            alert('please enter Details');
-            return;
-        }
-        if (a.Name == null) {
-            alert('Please Enter Name');
-            return;
-        }
-        
-
-        var Selapps = {
-            Name: a.Name,
-            Description: a.Description,           
-            insupdflag: 'I',
-            Active: a.Active,
-        }
-
-        var req = {
-            method: 'POST',
-            url: '/api/objects/saveObjects',
-            data: Selapps
-        }
-        $http(req).then(function (response) {
-
-            alert("Saved successfully!");
-
-            $scope.Group = null;
-
-        }, function (errres) {
-            var errdata = errres.data;
-            var errmssg = "";
-            errmssg = (errdata && errdata.ExceptionMessage) ? errdata.ExceptionMessage : errdata.Message;
-            alert(errmssg);
-        });
-        $scope.currRole = null;
-    };
+    
 
     $scope.newChildObject = function (NewObject) {
 
@@ -157,10 +120,6 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
             alert('Please enter name.');
             return;
         }
-
-
-
-
 
         var SelNewObjects = {
 

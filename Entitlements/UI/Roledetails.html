@@ -29,7 +29,7 @@
     
 
 </head>
-<body ng-app="myApp" ng-controller="myCtrl" ng-init="GetRoles();">
+<body ng-app="myApp" ng-controller="myCtrl" ng-init="GetApplications();GetRoles();">
     <div>
         <a id="totop" href="#"><i class="fa fa-angle-up"></i></a><!--END BACK TO TOP--><!--BEGIN TOPBAR-->
     <div id="header-topbar-option-demo" class="page-header-topbar">
@@ -139,11 +139,11 @@
                                 </i><span class="menu-title">Configuration</span><span class="fa arrow"></span>
                             </a>
                             <ul class="nav nav-second-level">
-
+                                <li><a href="Applications.html" data-toggle="tooltip" data-placement="right" title="Details of Applications"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Applications</span></a></li>
                                 <li><a href="TypeGroups.html" data-toggle="tooltip" data-placement="right" title="Details of TypeGroups"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Type Groups</span></a></li>
                                 <li><a href="Types.html" data-toggle="tooltip" data-placement="right" title="Details of Types"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Types</span></a></li>
                                 <li><a href="Roles.html" data-toggle="tooltip" data-placement="right" title="Details of Roles"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Roles</span></a></li>
-                                <li class="active"><a href="RoleDetails.html" data-toggle="tooltip" data-placement="right" title="Details of RoleDetails"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Role Details</span></a></li>
+                                <li class="active"><a href="RoleDetails.html" data-toggle="tooltip" data-placement="right" title="Details of RoleDetails"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Role Objects</span></a></li>
                                 <li><a href="Objects.html" data-toggle="tooltip" data-placement="right" title="Details of Objects"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Objects</span></a></li>
 
 
@@ -181,13 +181,13 @@
                                         <div class="col-lg-12">
                                         
                                                 <div class="row mbm">
-                                                    <!--<div class="col-md-5">
-                                                            Company: <select ng-options="s.Name for s in initdata.Table track by s.Id" ng-model="cmp" ng-change="getRolesForCompany(cmp)">
+                                                    <div class="col-md-4">
+                                                            Application: <select ng-options="s.Name for s in application track by s.Id" ng-model="aa" class="form-control" style="width:50%;">
                                                         <option value="">Select</option>
                                                             </select>
-                                                    </div>-->
-                                                    <div class="col-md-5">
-                                                            Role: <select ng-options="r.Name for r in roles track by r.Id" ng-model="r" ng-change="getRoleDetails(r)">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                            Role: <select ng-options="r.Name for r in roles track by r.Id" ng-model="r" ng-change="getRoleDetails(r)" class="form-control" style="width:50%;">
                                                     <option value="">Select</option>
                                                        </select>
                                                     </div>                                                    
@@ -197,11 +197,10 @@
                                                     <!--<caption class="mbl mtl"><a href="#" onclick="jQuery('#example-advanced').treetable('expandAll'); return false;">Expand all</a>&nbsp; | &nbsp;<a href="#" onclick="jQuery('#example-advanced').treetable('collapseAll'); return false;">Collapse all</a></caption>-->
                                                     <thead>
                                                         <tr>
-                                                            <th width="30%">Name</th>
-                                                            <th width="20%">Details</th>
-                                                            <th width="50%">Accesses</th>
-                                                            
-                                                           
+                                                            <th width="20%">Name</th>
+                                                            <th width="20%">Parent</th>                                                            
+                                                            <th width="30%">Accesses</th>
+                                                            <th width="30%">Path</th>                                                           
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -211,14 +210,15 @@
                                                                 <span class="folder">{{a.Name}}</span>
 
                                                             </td>
-
-                                                            <td style="text-align:center">
-                                                                <button ng-click="ViewDetails(a)" class="btn btn-default btn-sm">Details</button>
-                                                            </td>                                                                                                                      
                                                             <td>
-                                                                
+                                                                {{a.Name}}
+                                                            </td>                                                                                                                                                                               
+                                                            <td ng-show="a.ParentId!=null">
+                                                                <select ng-options="at.Name for at in acesstype track by at.Id" ng-model="at" class="form-control" style="width:50%;">
+                                                                    <option value="">Select</option>
+                                                                </select>
                                                             </td>
-                                                            
+                                                            <td>{{a.Path}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

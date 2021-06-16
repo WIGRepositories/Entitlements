@@ -15,6 +15,7 @@ namespace Entitlements.Controllers
     public class ObjectsController : ApiController
     {
         [HttpGet]
+        [Route("api/Objects/getObjects")]
         public DataTable getObjects(int objid)
         {
             DataTable Tbl = new DataTable();
@@ -44,6 +45,7 @@ namespace Entitlements.Controllers
         }
 
         [HttpGet]
+        [Route("api/Objects/GetApplications")]
         public DataTable GetApplications()
         {
             DataTable Tbl = new DataTable();
@@ -80,6 +82,7 @@ namespace Entitlements.Controllers
 
 
         [HttpPost]
+        [Route("api/Objects/saveObjects")]
         public HttpResponseMessage saveObjects(Objects b)
         {
 
@@ -175,6 +178,90 @@ namespace Entitlements.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
             }
         }
+
+        [HttpPost]
+        [Route("api/Objects/saveApplications")]
+        public DataTable saveApplications(applications b)
+        {
+
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "save Applications....");
+
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "InsUpdDelApplications";
+                cmd.Connection = conn;
+                conn.Open();
+
+                SqlParameter cc = new SqlParameter();
+                cc.ParameterName = "@Id";
+                cc.SqlDbType = SqlDbType.Int;
+                cc.Value = b.Id;
+                cmd.Parameters.Add(cc);
+
+                SqlParameter cname = new SqlParameter();
+                cname.ParameterName = "@Name";
+                cname.SqlDbType = SqlDbType.VarChar;
+                cname.Value = b.Name;
+                cmd.Parameters.Add(cname);
+
+                SqlParameter dd = new SqlParameter();
+                dd.ParameterName = "@Description";
+                dd.SqlDbType = SqlDbType.VarChar;
+                dd.Value = b.Description;
+                cmd.Parameters.Add(dd);
+
+                SqlParameter fd = new SqlParameter();
+                fd.ParameterName = "@CreatedBy";
+                fd.SqlDbType = SqlDbType.Int;
+                fd.Value = b.CreatedBy;
+                cmd.Parameters.Add(fd);
+
+                SqlParameter gd = new SqlParameter();
+                gd.ParameterName = "@UpdatedBy";
+                gd.SqlDbType = SqlDbType.Int;
+                gd.Value = b.UpdatedBy;
+                cmd.Parameters.Add(gd);
+
+                SqlParameter aa = new SqlParameter();
+                aa.ParameterName = "@Active";
+                aa.SqlDbType = SqlDbType.Int;
+                aa.Value = b.Active;
+                cmd.Parameters.Add(aa);
+
+                SqlParameter flag = new SqlParameter();
+                flag.ParameterName = "@flag";
+                flag.SqlDbType = SqlDbType.VarChar;
+                flag.Value = b.flag;                
+                cmd.Parameters.Add(flag);
+
+                SqlDataAdapter ds = new SqlDataAdapter(cmd);
+                ds.Fill(dt);
+                
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "save Applications completed.");               
+            }
+            catch (Exception ex)
+            {
+                if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+                string str = ex.Message;
+                traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in save Applications :" + ex.Message);               
+            }
+
+            return dt;
+        }
+
         public void Options()
         {
 

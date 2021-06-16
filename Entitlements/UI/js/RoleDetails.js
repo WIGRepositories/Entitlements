@@ -28,7 +28,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
     $scope.GetRoles = function () {
         $http.get('/api/Roles/GetRoles?allroles=-1').then(function (response, data) {
             $scope.roles = response.data;
-
+            $scope.getRoleDetails();
         });
     }
 
@@ -40,46 +40,56 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         }
     };
 
-    $scope.GetCompanies = function () {
 
-        var vc = {
-            needCompanyName: '1'
-        };
-
-        var req = {
-            method: 'POST',
-            url: '/api/Types/ConfigData',
-            //headers: {
-            //    'Content-Type': undefined
-            data: vc
-        }
-        $http(req).then(function (res) {
-            $scope.initdata = res.data;
+    $scope.GetApplications = function () {
+        $http.get('/api/objects/GetApplications').then(function (res, data) {
+            $scope.application = res.data;
         });
-
-        $scope.getRolesForCompany = function (seltype) {
-            if (seltype == null) {
-                $scope.cmproles = null;
-                return;
-            }
-            var cmpId = (seltype) ? seltype.Id : -1;
-
-            $http.get('/api/Roles/GetCompanyRoles?companyId=' + 1).then(function (res, data) {
-                $scope.cmproles = res.data;
-            });
-        }
-
     }
 
-    $scope.getRoleDetails = function (r) {
-        if (r == null) {
-            $scope.roleobjects = null;
-            return;
-        }
-        var cmpId = (r) ? r.id : -1;
+    $scope.GetAccessTypes = function () {
+        $http.get('/api/Types/TypesByGroupId?groupid=36').then(function (res, data) {
+            $scope.acesstype = res.data;
+        });
+    }
 
+
+    //$scope.GetCompanies = function () {
+
+    //    var vc = {
+    //        needCompanyName: '1'
+    //    };
+
+    //    var req = {
+    //        method: 'POST',
+    //        url: '/api/Types/ConfigData',
+    //        //headers: {
+    //        //    'Content-Type': undefined
+    //        data: vc
+    //    }
+    //    $http(req).then(function (res) {
+    //        $scope.initdata = res.data;
+    //    });
+
+    //    $scope.getRolesForCompany = function (seltype) {
+    //        if (seltype == null) {
+    //            $scope.cmproles = null;
+    //            return;
+    //        }
+    //        var cmpId = (seltype) ? seltype.Id : -1;
+
+    //        $http.get('/api/Roles/GetCompanyRoles?companyId=' + 1).then(function (res, data) {
+    //            $scope.cmproles = res.data;
+    //        });
+    //    }
+
+    //}
+
+    $scope.getRoleDetails = function (r) {       
+        var cmpId = (r==null) ? -1 : r.id;
         $http.get('/api/RoleDetails/GetRoleDetails?roleId=' + cmpId).then(function (res, data) {
             $scope.roleobjects = res.data.Table;
+            $scope.GetAccessTypes();
         });
     }
 

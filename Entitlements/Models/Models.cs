@@ -3054,5 +3054,17 @@ namespace Entitlements.Models
         public string ImageOne { get; set; }
         public string ImageTwo { get; set; }
     }
+
+    public class applications
+    {
+        public int Id { get; set; }
+        public int CreatedBy { get; set; }
+        public int Active { get; set; }
+        public int UpdatedBy { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string flag { get; set; }
+
+    }
 }
 

@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +79,7 @@
     <Content Include="References\PayPal.dll" />
     <Content Include="References\QRCoder.dll" />
     <Content Include="References\UnityEngine.dll" />
+    <Content Include="UI\Applications.html" />
     <Content Include="UI\css\bootstrap.min.css" />
     <Content Include="UI\css\handsontable.full.min.css" />
     <Content Include="UI\css\style-responsive.css" />
@@ -3566,6 +3568,7 @@
     <Content Include="UI\index.html" />
     <Content Include="UI\js\angular-animate.js" />
     <Content Include="UI\js\angular.js" />
+    <Content Include="UI\js\Applications.js" />
     <Content Include="UI\js\bootstrap.min.js" />
     <Content Include="UI\js\charts-highchart-line.js" />
     <Content Include="UI\js\EmailGatewayConfiguration.js" />

@@ -18,7 +18,7 @@
     <link type="text/css" rel="stylesheet" href="css/style-responsive.css">
 </head>
 
-<body ng-app="myApp" ng-controller="myCtrl" ng-init="getObjects()" ng-model="NewObjects">
+<body ng-app="myApp" ng-controller="myCtrl" ng-init="GetApplications();getObjects();">
     <div>
               <a id="totop" href="#"><i class="fa fa-angle-up"></i></a><!--END BACK TO TOP--><!--BEGIN TOPBAR-->
         <div id="header-topbar-option-demo" class="page-header-topbar">
@@ -127,11 +127,11 @@
                                     </i><span class="menu-title">Configuration</span><span class="fa arrow"></span>
                                 </a>
                                 <ul class="nav nav-second-level">
-
+                                    <li><a href="Applications.html" data-toggle="tooltip" data-placement="right" title="Details of Applications"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Applications</span></a></li>
                                     <li><a href="TypeGroups.html" data-toggle="tooltip" data-placement="right" title="Details of TypeGroups"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Type Groups</span></a></li>
                                     <li><a href="Types.html" data-toggle="tooltip" data-placement="right" title="Details of Types"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Types</span></a></li>
                                     <li><a href="Roles.html" data-toggle="tooltip" data-placement="right" title="Details of Roles"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Roles</span></a></li>
-                                    <li><a href="RoleDetails.html" data-toggle="tooltip" data-placement="right" title="Details of RoleDetails"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Role Details</span></a></li>
+                                    <li><a href="RoleDetails.html" data-toggle="tooltip" data-placement="right" title="Details of RoleDetails"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Role Objects</span></a></li>
                                     <li class="active"><a href="Objects.html" data-toggle="tooltip" data-placement="right" title="Details of Objects"><i class="fa fa-angle-double-right"></i><span class="submenu-title">Objects</span></a></li>
 
 
@@ -170,7 +170,7 @@
                                                 <div class="actions">
                                                     <button type="button" data-target="#Modal-header-new" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float:right;margin:10px;">  Add New Object</button>
 
-                                                    <button ng-hide="isSuperUser == 0 && isAdminSupervisor ==0" type="button" data-target="#Modal-header-newapp" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float: right; margin: 10px;"> Add Application</button>
+                                                    <!--<button ng-hide="isSuperUser == 0 && isAdminSupervisor ==0" type="button" data-target="#Modal-header-newapp" data-toggle="modal" class="btn btn-info btn-sm fa fa-plus" style="float: right; margin: 10px;"> Add Application</button>-->
 
                                                 </div>
 
@@ -403,60 +403,7 @@
                 </div>
             </div>
 
-            <div id="Modal-header-newapp" tabindex="-1" role="dialog" aria-labelledby="modal-header-primary-label" aria-hidden="true" class="modal fade">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header modal-header-primary">
-                            <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
-                            <h4 id="modal-header-primary-label" class="modal-title">Add Application</h4>
-                        </div>
-                        <div class="modal-body" ng-model="newapp">
-
-                            <div class="row mbm">
-                                <div style="text-align:right">
-                                    <label for="Name" class="col-md-4 control-label" style="color:red;"> Name <span class='require'>*</span></label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input id="Name" type="text" ng-model="newapp.Name" class="form-control" /><span class="help-block"></span>
-                                </div>
-                            </div>
-
-
-                            <div class="row mbm">
-                                <div style="text-align:right">
-                                    <label for="Description" class="col-md-4 control-label"> Description <span class='require'></span></label>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <input id="Description" type="text" ng-model="newapp.Description" class="form-control" /><span class="help-block"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mbm">
-                            <div style="text-align:right">
-                                <label for="Active" class="col-md-4 control-label">Active<span class='require'></span></label>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div><input type="checkbox" class="icheckbox_minimal-grey activeCheckbox" ng-model="newapp.Active" ng-true-value="1" ng-false-value="0" /></div>
-
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <div class="col-md-offset-3 col-md-9">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveNewApp(newapp);">Save</button>
-
-                                <a href="#" class="btn btn-green" data-dismiss="modal">Cancel</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
+            
                            
                             <!--<div class="row mbm">
             <div style="text-align:right">
