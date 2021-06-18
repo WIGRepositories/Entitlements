@@ -1,8 +1,8 @@
-var app = angular.module('myApp', ['ngStorage', 'ui.bootstrap']);
+ï»¿var app = angular.module('myApp', ['ngStorage']);
 var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $interval) {
     if ($localStorage.uname == null) {
         $scope.uname = $localStorage.uname;
-        //window.location.href = "login.html";
+        window.location.href = "login.html";
     }
     $scope.uname = $localStorage.uname;
     $scope.userdetails = $localStorage.userdetails;
@@ -10,13 +10,13 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $int
     //$scope.canShow = ($scope.Roleid == 1 || $scope.roleid == 6 || $scope.roleid == 13);
 
     $scope.GetCountry = function () {
-             
+
         $http.get('/api/Users/GetCountry?active=1').then(function (response, req) {
             $scope.Countries = response.data;
-       
+
         });
     }
-    
+
 
 
     $scope.GetFleetDetails = function () {
@@ -82,14 +82,14 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $int
         });
     }
 
-    
+
 
     $scope.displocations = function () {
         var maplocations = $scope.locations;
 
         var map = new google.maps.Map(document.getElementById('gmap_canvas'), {
             zoom: 15,
-            center: new google.maps.LatLng(lat,long), //17.8252° S, 31.0335° E
+            center: new google.maps.LatLng(lat, long), //17.8252Â° S, 31.0335Â° E
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
@@ -133,22 +133,22 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $int
         var roleid = $localStorage.userdetails[0].roleid;
 
         $http.get('/api/dashboard/getdashboard?userid=-1&roleid=' + roleid + '&ctryId=' + $scope.nn.Id).then(function (res, data) {
-            
+
             $scope.dashboardDS = res.data;
-            $localStorage.dashboardDS = res.data;            
+            $localStorage.dashboardDS = res.data;
         });
-        
-    //   $scope.GetConfigData();
-     
+
+        //   $scope.GetConfigData();
+
     }
 
     $scope.GetConfigData = function () {
 
-        var vc = {            
+        var vc = {
             includeActiveCountry: '1',
             includeVehicleGroup: '1',
             includeFleetOwner: '1'
-            
+
         };
 
         var req = {
@@ -161,7 +161,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $int
             $scope.initdata = res.data;
             $scope.nn = $scope.initdata.Table1[0];
             //$scope.ctry = $scope.initdata.Table1[0];
-            
+
         });
     }
 
@@ -255,14 +255,14 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $int
     }
 
     $scope.activeRefresh = true;
-    $scope.c = 0; 
-    $interval(function(){
-        if($scope.activeRefresh){
+    $scope.c = 0;
+    $interval(function () {
+        if ($scope.activeRefresh) {
             $scope.GetDashboardDS();
-          //$scope.mssg = 'this is call no:'+ $scope.c++;
+            //$scope.mssg = 'this is call no:'+ $scope.c++;
         }
-    },10000);
-    $scope.$on('$destroy', function() {
+    }, 10000);
+    $scope.$on('$destroy', function () {
         $scope.activeRefresh = false; // STOP THE REFRESH
     });
 
@@ -294,7 +294,7 @@ app.controller('mapCtrl', function ($scope, $http) {
     //       $scope.currentloc = res.data;          
     //       $scope.CenterMap();
     //    });
-        
+
     //}
 
 
@@ -318,19 +318,19 @@ app.controller('mapCtrl', function ($scope, $http) {
 
             //alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());
         });
-        $http.get('/api/DriverStatus/GetDriverlocation?ctnyId='+$scope.ctry.Id).then(function (res, data) {
+        $http.get('/api/DriverStatus/GetDriverlocation?ctnyId=' + $scope.ctry.Id).then(function (res, data) {
             $scope.currentloc = res.data;
-            
+
             $scope.currentloc.forEach(function (loc) {
                 createMarker(loc);
             });
-            
+
         });
 
-        
-    }   
-    
-    var createMarkerWithLatLon = function (lat,long) {
+
+    }
+
+    var createMarkerWithLatLon = function (lat, long) {
         var marker = new google.maps.Marker({
             map: $scope.map,
             position: new google.maps.LatLng(lat, long),
@@ -338,7 +338,7 @@ app.controller('mapCtrl', function ($scope, $http) {
 
             icon: marker
         });
-       
+
         google.maps.event.addListener(marker, 'click', function () {
             alert();
             infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
@@ -354,15 +354,15 @@ app.controller('mapCtrl', function ($scope, $http) {
             map: $scope.map,
             position: new google.maps.LatLng(loc.Latitude, loc.Longitude),
             //title: loc.loc
-           
-            icon: marker            
+
+            icon: marker
         });
         marker.content = '<div class="infoWindow"</div>' + 'Driver Name: ' + loc.NAme + '<br> Driver Number: ' + loc.DriverNo + '<br> Vehicle Group: ' + loc.VehicleGroupId + '</div>';;
 
         var infoWindow = new google.maps.InfoWindow();
 
         google.maps.event.addListener(marker, 'click', function () {
-            
+
             infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
             infoWindow.setContent(marker.content);
             infoWindow.open($scope.map, marker);
@@ -371,7 +371,7 @@ app.controller('mapCtrl', function ($scope, $http) {
         $scope.markers.push(marker);
     };
 
-   
+
 
 });
 
@@ -462,8 +462,8 @@ var mycrtl1 = app.controller('myCtrl1', function ($scope, $http, $localStorage, 
         });
     }
 
-    
-    
+
+
 
     $scope.getUsersnRoles = function () {
         var s = $scope.cmp;
@@ -474,7 +474,7 @@ var mycrtl1 = app.controller('myCtrl1', function ($scope, $http, $localStorage, 
         }
         var cmpId = (s == null) ? -1 : s.Id;
 
-       
+
         $http.get('/api/Users/GetUserRoles?cmpId=' + $scope.cmp.Id).then(function (res, data) {
             $scope.userRoles = res.data;
         });
@@ -601,7 +601,7 @@ var mycrtl1 = app.controller('myCtrl1', function ($scope, $http, $localStorage, 
 
     }
 
-    
+
 
     $scope.GetFleetStaff = function () {
         if ($scope.cmp == null || $scope.cmp.Id == null) {
@@ -652,6 +652,13 @@ var mycrtl1 = app.controller('myCtrl1', function ($scope, $http, $localStorage, 
         });
 
     }
+
+    $scope.logout = function () {
+        $localStorage.userdetails = null;
+        $localStorage.uname = null;
+        window.location.href = 'Login.html';
+    }
+
     $scope.showDialog = function (message) {
 
         var modalInstance = $uibModal.open({

@@ -1,8 +1,8 @@
-
+﻿
 // JavaScript source code
 // JavaScript source code
 // JavaScript source code
-var app = angular.module('myApp', ['ngStorage', 'ui.bootstrap'])
+var app = angular.module('myapp', ['ngStorage'])
 
 
 
@@ -21,7 +21,7 @@ app.directive('onFinishRender', function ($timeout) {
 });
 
 
-var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uibModal) {
+var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage) {
     if ($localStorage.uname == null) {
         window.location.href = "login.html";
     }
@@ -46,7 +46,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
     //        $scope.application = res.data;
     //    });
     //}
-    
+
     $scope.example1model = [];
     $scope.example1data = [{ id: 1, label: "David" }
         , { id: 2, label: "Jhon" }
@@ -77,12 +77,12 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         var SelNewObjects = {
             Name: NewObject.Name,
             Description: NewObject.Description,
-            ParentId:$scope.p.Id,
+            ParentId: $scope.p.Id,
             RootObjectId: NewObject.RootObjectId,
             Access: NewObject.Access,
             insupdflag: 'I',
             Active: 1,
-       
+
 
 
         }
@@ -107,7 +107,7 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         $scope.currRole = null;
     };
 
-    
+
 
     $scope.newChildObject = function (NewObject) {
 
@@ -127,10 +127,12 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
             Id: -1,
             Name: NewObject.Name,
             Description: NewObject.Description,
-            ParentId: NewObject.ParentId,
+            ParentId: $scope.mt.Id,
+            RootObjectId:NewObject.RootObjectId,
+            ApplicationId: $scope.mt.ApplicationId,
 
             Active: 1,
-            insupdflag: 'U'
+            insupdflag: 'I'
         };
 
         var req = {
@@ -142,8 +144,9 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         $http(req).then(function (response) {
 
             alert("Saved successfully!");
-
-            $scope.Group = null;
+            $('#Modal-header-new').modal("hide");
+            $scope.NewObject = null;
+            $scope.newType = null;
             $scope.getObjects();
 
         }, function (errres) {
@@ -155,6 +158,49 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         $scope.currRole = null;
     };
 
+    $scope.DelObj = function (ss) {        
+        $scope.dlobj = ss;
+        
+    }
+
+    $scope.remove_node = function (ma) {
+
+       
+
+        var SelNewObjects = {
+
+
+            Id: ma.Id,
+            Name: ma.Name,
+            Description: ma.Description,
+            ParentId: ma.ParentId,
+            RootObjectId: ma.RootObjectId,
+            ApplicationId: ma.ApplicationId,
+
+            Active: 1,
+            insupdflag: 'D'
+        };
+
+        var req = {
+            method: 'POST',
+            url: '/api/Objects/saveObjects',
+            data: SelNewObjects
+        }
+
+        $http(req).then(function (response) {
+            $('#Modal-header-delete').modal("hide");
+            alert("Deleted successfully!");            
+            $scope.Group = null;
+            $scope.getObjects();
+
+        }, function (errres) {
+            var errdata = errres.data;
+            var errmssg = "";
+            errmssg = (errdata && errdata.ExceptionMessage) ? errdata.ExceptionMessage : errdata.Message;
+            alert(errmssg);
+        });
+    }
+
     $scope.setCurrRole = function (grp) {
         $scope.currRole = grp;
     };
@@ -163,6 +209,13 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
         $scope.currRole = null;
 
     };
+
+    $scope.logout = function () {
+        $localStorage.userdetails = null;
+        $localStorage.uname = null;
+        window.location.href = 'Login.html';
+    }
+
     $scope.showDialog = function (message) {
 
         var modalInstance = $uibModal.open({
@@ -176,15 +229,19 @@ var ctrl = app.controller('myCtrl', function ($scope, $http, $localStorage, $uib
             }
         });
     }
-    $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-        //you also get the actual event object
-        //do stuff, execute functions -- whatever...
-        //alert("ng-repeat finished");
-        $("#example-advanced").treetable({ initialState: 'expanded', expandable: true }, true);
-        $("#example-advanced tbody tr:first").toggleClass("selected");
 
+    $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+        $("#example2").treetable({
+            initialState: 'expanded'
+            , expandable: true
+            , onNodeCollapse: function () {
+
+                console.log($(this.row));
+            }
+        }, true);
 
     });
+
 }
 
 );

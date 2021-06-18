@@ -1,17 +1,17 @@
-var myapp1 = angular.module('myApp1', ['ngStorage', 'ngAnimate', 'treasure-overlay-spinner', 'ui.bootstrap'])
+﻿var myapp1 = angular.module('myapp', ['ngStorage'])
 //var myapp1 = angular.module('myApp', ['ngStorage'])
 
-var myCtrl = myapp1.controller('myCtrl', function ($scope, $http, $localStorage, $rootScope, $uibModal) {
+var myCtrl = myapp1.controller('myCtrl', function ($scope, $http, $localStorage) {
 
-    $rootScope.spinner = {
-        active: false,
-        on: function () {
-            this.active = true;
-        },
-        off: function () {
-            this.active = false;
-        }
-    }
+    //$rootScope.spinner = {
+    //    active: false,
+    //    on: function () {
+    //        this.active = true;
+    //    },
+    //    off: function () {
+    //        this.active = false;
+    //    }
+    //}
 
     $scope.save = function (type) {
 
@@ -62,14 +62,14 @@ var myCtrl = myapp1.controller('myCtrl', function ($scope, $http, $localStorage,
             url: '/api/LOGIN/ValidateCredentials/',
             data: inputcred
         }
-        $rootScope.spinner.on();
-        angular.element('body').addClass('spinnerOn'); // add Class to body to show spinner
+        //$rootScope.spinner.on();
+       // angular.element('body').addClass('spinnerOn'); // add Class to body to show spinner
 
 
         $http(req).then(function (res) {
 
             if (res.data.length == 0) {
-                $rootScope.spinner.off();
+                //$rootScope.spinner.off();
                 //  $rootScope.$apply();
                 //angular.element('body').removeClass('spinnerOn').then(function () { alert('invalid credentials'); }); // hide spinner
                 // alert('invalid credentials');
@@ -81,7 +81,7 @@ var myCtrl = myapp1.controller('myCtrl', function ($scope, $http, $localStorage,
                 $localStorage.userdetails = res.data;
                 $localStorage.pagesize = 10;
                 var roleid = $localStorage.userdetails[0].roleid;
-                window.location.href = "UI/index.html";
+                window.location.href = "index.html";
 
                 //switch (roleid) {
 
@@ -121,7 +121,7 @@ var myCtrl = myapp1.controller('myCtrl', function ($scope, $http, $localStorage,
             }
         },//error
         function (res) {
-            $rootScope.spinner.off();
+           // $rootScope.spinner.off();
             //  $rootScope.$apply();
             //angular.element('body').removeClass('spinnerOn'); // hide spinner
         });

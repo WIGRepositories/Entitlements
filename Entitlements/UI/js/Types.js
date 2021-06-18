@@ -1,46 +1,102 @@
-// JavaScript source code
-var myapp1 = angular.module('myApp', ['ngStorage', 'ui.bootstrap'])
-var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage, $uibModal) {
+﻿// JavaScript source code
+var myapp1 = angular.module('myapp', ['ngStorage'])
+var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage) {
     if ($localStorage.uname == null) {
         window.location.href = "login.html";
     }
     $scope.uname = $localStorage.uname;
     $scope.userdetails = $localStorage.userdetails;
-    $scope.Roleid = $scope.userdetails[0].roleid;
-    $scope.page = 1;
-    $scope.pagesize = $localStorage.pagesize;
-    $scope.dashboardDS = $localStorage.dashboardDS;
-    $http.get('/api/typegroups/gettypegroups').then(function (res, data) {
-        $scope.TypeGroups = res.data;
-        $scope.getselectval();
+    //$scope.Roleid = $scope.userdetails[0].roleid;
 
-    });
+    $scope.CanCreate = 0;
+    $scope.selectedvalue = '10';
+    $scope.selectgoto = 1;
+    $scope.ty = '-1';
 
-    $scope.getselectval = function (seltype, flag) {
-        var grpid = (seltype) ? seltype.Id : -1;
-        var curpage = $scope.page;
-        if (flag == 'n') {
+    $scope.getTypesbygrouppid = function () {
+
+        $http.get('/api/MasterDataGroups/GetMasterDataGroups').then(function (res, data) {
+            $scope.TypeGroups = res.data;
+            $scope.s = $scope.TypeGroups[0];
+            $scope.initdata();
+
+        });
+    }
+    $scope.initdata = function (flag) {
+        var selecting = ($scope.selectedvalue == null) ? 10 : $scope.selectedvalue;
+        if (flag == '' || flag == null) {
+            $scope.page = ($scope.selectgoto == null || $scope.selectgoto == '') ? 1 : $scope.selectgoto;
+        }
+        if (flag == 'N') {
+
             $scope.page++;
             curpage = $scope.page;
-        } else if (flag == 'p') {
+            $scope.firstvalue = $scope.secondvalue;
+            $scope.secondvalue = curpage * selecting;
+            $scope.selectgoto = curpage;
+        } else if (flag == 'P') {
             $scope.page--
             curpage = $scope.page;
+            $scope.secondvalue = $scope.firstvalue;
+            $scope.firstvalue = ($scope.firstvalue - selecting);
+            if ($scope.firstvalue == 0) {
+                $scope.firstvalue = 1;
+            }
+            $scope.selectgoto = curpage;
         }
         else {
-            $scope.page = 1;
+            $scope.page;
             curpage = $scope.page;
+            if ($scope.selectgoto > 1) {
+
+                $scope.secondvalue = curpage * selecting;
+                $scope.firstvalue = ($scope.secondvalue - selecting);
+            }
+            else {
+                $scope.selectgoto = 1;
+                $scope.firstvalue = 1
+                $scope.secondvalue = selecting;
+            }
         }
-
-        $http.get('/api/Types/TypesPaging?groupid=' + grpid + '&curpage=' + curpage + '&maxrows=' + 10).then(function (res, data) {
+        var TypeId = ($scope.s == null) ? -1 : $scope.s.Id;
+        $http.get('/api/MasterDataGroups/GetMasterDataTypespaging?TypeId=' + TypeId + ' &curpage=' + curpage + '&maxrows=' + selecting).then(function (res, data) {
             $scope.Types = res.data.Table;
-            $scope.paging = res.data.Table1;
+            $scope.paggin = res.data.Table1;            
+            if ($scope.Types.length < selecting) {
+                $scope.secondvalue = $scope.secondvalue - (selecting - $scope.Types.length);
 
-            ///loop to fill seltype
+            }
+            var result = [];
+            for (var i = 1; i <= $scope.paggin[0].totalpages; i++) {
+                result.push(i);
+            }
+            $scope.jumptotalpages = result;
         });
 
-        // $scope.selectedvalues = 'Name: ' + $scope.selitem.name + ' Id: ' + $scope.selitem.Id;
-
     }
+
+
+    //Notification on the top corner side of screen
+
+    $scope.GetNotifications = function () {
+        $http.get("/api/notifications/getnotifications").then(function (res, data) {
+            $scope.notificaions = res.data;
+        }
+            , function (err) {
+                alert(err)
+            })
+    }
+
+    $scope.getTypesByGroupId = function (s) {
+        var gid = ($scope.s) ? $scope.s.Id : -1;
+        $http.get('/api/MasterDataGroups/GetDataTypesByGroupId?grpid=' + gid).then(function (res, data) {
+            $scope.Types = res.data;
+
+
+        });
+    }
+
+
 
 
     $scope.save = function (Types) {
@@ -56,7 +112,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
 
             return;
         }
-        if (Types.TypeGroupId == null) {
+        if ($scope.s.Id == null) {
             alert('Please select a type group');
             return;
         }
@@ -67,26 +123,24 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
             Name: Types.Name,
             Description: Types.Description,
             Active: Types.Active,
-            TypeGroupId: Types.TypeGroupId,
-            ListKey: Types.ListKey,
-            Listvalue: Types.Listvalue,
-            insupddelflag: 'U'
+            TypeGroupId: $scope.s.Id,
+            listkey: Types.listvalue,
+            listvalue: Types.listvalue,
+            flag: 'U'
         };
 
         var req = {
             method: 'POST',
-            url: '/api/Types/SaveType',
-            //headers: {
-            //    'Content-Type': undefined
+            url: '/api/MasterDataGroups/InSUpDMasterDataTypes',
             data: Types
         }
 
         $http(req).then(function (response) {
 
             alert("Saved successfully!");
+            $('#Modal-header-primary').modal("hide");
 
-
-
+            $scope.getTypes();
             $scope.Group = null;
 
         }, function (errres) {
@@ -102,8 +156,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
     $scope.saveNewType = function (newType) {
 
         if (newType == null) {
-            alert('Please enter name.');
-            return;
+            alert('Please enter the details.');
         }
 
         if (newType.Name == null) {
@@ -123,23 +176,22 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
             Description: newType.Description,
             Active: 1,//newType.Active,
             TypeGroupId: newType.group.Id,
-            ListKey: newType.ListKey,
-            Listvalue: newType.Listvalue,
-            insupddelflag: 'I'
+            listkey: newType.listvalue,
+            listvalue: newType.listvalue,
+            flag: 'I'
         };
 
         var req = {
             method: 'POST',
-            url: '/api/Types/SaveType',
+            url: '/api/MasterDataGroups/InSUpDMasterDataTypes',
             data: newTypeData
         }
 
         $http(req).then(function (response) {
-
             alert("Saved successfully!");
+            $('#Modal-header-new').modal("hide");
+            $scope.newType = null;
 
-
-            $scope.Group = null;
 
         }, function (errres) {
             var errdata = errres.data;
@@ -147,8 +199,14 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
             errmssg = (errdata && errdata.ExceptionMessage) ? errdata.ExceptionMessage : errdata.Message;
             alert(errmssg);
         });
-        $scope.currGroup = null;
+
     };
+
+    $scope.logout = function () {
+        $localStorage.userdetails = null;
+        $localStorage.uname = null;
+        window.location.href = 'Login.html';
+    }
 
     $scope.showDialog = function (message) {
 
@@ -167,8 +225,15 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
 
 
 
-    $scope.setCompany = function (grp) {
-        $scope.currGroup = grp;
+    $scope.setTYPES = function (T) {
+        $scope.Types1 = T;
+
+        for (i = 0; i < $scope.TypeGroups.length; i++) {
+            if ($scope.TypeGroups[i].Id == T.TypeGroupId) {
+                $scope.st = $scope.TypeGroups[i];
+                break;
+            }
+        }
     };
 
     $scope.clearGroup = function () {

@@ -1,6 +1,6 @@
 ﻿// JavaScript source code
-var myapp1 = angular.module('myApp', ['ngStorage', 'ui.bootstrap'])
-var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage, $uibModal, $filter) {
+var myapp1 = angular.module('myApp', ['ngStorage'])
+var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage, $filter) {
     if ($localStorage.uname == null) {
         window.location.href = "login.html";
     }
@@ -12,7 +12,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
     $scope.checkedArr = new Array();
     $scope.uncheckedArr = new Array();
     $scope.cmproles = [];
-   
+
 
     $scope.GetApplications = function () {
         $http.get('/api/objects/GetApplications').then(function (res, data) {
@@ -49,7 +49,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
         $http(req).then(function (response) {
 
             alert("Saved successfully!");
-
+            $("#Modal-header-new").modal('hide');
             $scope.newapp = null;
             $scope.GetApplications();
 
@@ -75,7 +75,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
 
 
         var Selapps = {
-            Id:m.Id,
+            Id: m.Id,
             Name: m.Name,
             Description: m.Description,
             flag: 'U',
@@ -91,7 +91,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
         $http(req).then(function (response) {
 
             alert("Updated successfully!");
-
+            $("#Modal-header-primary").modal('hide');
             $scope.currRole = null;
             $scope.GetApplications();
 
@@ -105,14 +105,14 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
     };
 
     $scope.setCurrRole = function (grp) {
-        $scope.currRole = grp;
+        $scope.editapp = grp;
     };
 
     $scope.clearCurrRole = function () {
         $scope.currRole = null;
     };
 
-   
+
     //This will hide the DIV by default.
     $scope.IsHidden = true;
     $scope.ShowHide = function () {
@@ -122,7 +122,7 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
 
 
 
-   
+
     $scope.toggle = function (item) {
         var idx = $scope.checkedArr.indexOf(item);
         if (idx > -1) {
@@ -165,6 +165,12 @@ var mycrtl1 = myapp1.controller('myCtrl', function ($scope, $http, $localStorage
         else
             return false;
     };
+
+    $scope.logout = function () {
+        $localStorage.userdetails = null;
+        $localStorage.uname = null;
+        window.location.href = 'Login.html';
+    }
 
 
 });
